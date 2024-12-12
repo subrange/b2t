@@ -1,5 +1,6 @@
 import re
 import sys
+from tokens import Token
 
 spec = [
     ('LET', r'\bLET\b'),
@@ -10,7 +11,6 @@ spec = [
     ('FOR', r'\bFOR\b'),
     ('NEXT', r'\bNEXT\b'),
     ('GOTO', r'\bGOTO\b'),
-    ('GOSUB', r'\bGOSUB\b'),
     ('REM', r'\bREM\b'),
     ('END', r'\bEND\b'),
     ('ASSIGN', r'='),
@@ -22,25 +22,17 @@ spec = [
     ('NEQ', r'<>'),
     ('LT', r'<'),
     ('GT', r'>'),
+    ('LINENUMBER', r'^\d{1,5}\s+'),
     ('NUMBER', r'\d+(\.\d+)?'),
     ('IDENTIFIER', r'[A-Za-z][A-Za-z0-9_]*'),
-    ('LINENUMBER', r'\d{1,5}'),
     ('SEMI', r';'),
     ('COMMA', r','),
+    ('STRING_LITERAL', r'"([^"\\]*(\\.[^"\\]*)*)"'),
     ('SKIP', r'[ \t]+'),
     ('NEWLINE', r'\n'),
     ('COMMENT', r'REM.*'),
     ('MISMATCH', r'.'),
 ]
-
-class Token:
-    def __init__(self,typ,val,pos):
-        self.typ=typ
-        self.val=val
-        self.pos=pos
-
-    def __repr__(self):
-        return f"Token({self.typ},{repr(self.val)},{self.pos})"
 
 class Lexer:
     def __init__(self,w):
@@ -68,21 +60,3 @@ class Lexer:
                     return Token(k,v,self.pos)
         return Token('EOF','',self.pos)
 
-def main():
-    statements = """
-    10 LET X = 10
-    20 LET Y = 5
-    30 PRINT X + Y
-    40 IF X > Y THEN PRINT "X is greater" ELSE PRINT "Y is greater"
-    50 REM This is a comment
-    60 GOTO 10
-    70 END
-    """
-    lexer=Lexer(statements)
-    t=lexer.next_token()
-    while t.typ!='EOF':
-        print(t)
-        t=lexer.next_token()
-
-if __name__=='__main__':
-    sys.exit(main())
