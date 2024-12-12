@@ -5,11 +5,18 @@ class Parser:
     self.tokens=tokens
     self.pos=0
 
+  def __repr__(self):
+    return f"Parser({repr(self.tokens)})"
+
   def peek(self):
     return self.tokens[self.pos] if self.pos < len(self.tokens) else Token('EOF','',self.pos)
 
   def advance(self):
     self.pos+=1
+
+  def skip_newlines(self):
+    while self.peek().typ=='NEWLINE':
+      self.advance()
 
   def require(self, typ):
     t=self.peek()
@@ -21,12 +28,11 @@ class Parser:
   def parse_program(self):
     p=[]
     while self.peek().typ!='EOF':
+      self.skip_newlines()
       s=self.parse_statement()
       if s:
         p.append(s)
     return p
-
-  # I should probably allow END or when readched an EOF just END as well.
 
   def parse_statement(self):
     """ single token """
@@ -45,7 +51,7 @@ class Parser:
       return self.parse_print_statement()
     if t.typ=='END':
       self.advance()
-      return {'type': 'End'}
+      return {"type": "End"}
     raise SyntaxError(f"Unsupported statement {t.typ}")
 
   def parse_print_statement(self):

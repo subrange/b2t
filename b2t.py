@@ -31,6 +31,8 @@ def main():
   parser=Parser(tokens)
   ast=parser.parse_program()
 
+  print(parser)
+
   transpiler=Transpiler(ast)
   ts_code=transpiler.transpile()
 
