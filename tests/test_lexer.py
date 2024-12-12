@@ -14,12 +14,12 @@ def test_lexer():
     60 GOTO 10
     70 END
     """.strip()
-    lexer = Lexer(statements)
-    tokens = []
-    t = lexer.next_token()
-    while t.typ != 'EOF':
+    lexer=Lexer(statements)
+    tokens=[]
+    t=lexer.next_token()
+    while t.typ!='EOF':
         tokens.append(t)
-        t = lexer.next_token()
+        t=lexer.next_token()
 
     print(tokens)
 
@@ -31,8 +31,8 @@ def test_lexer():
     assert tokens[4].typ=='NUMBER'
     assert tokens[-1].typ=='END'
 
-    assert len(tokens) > 0
+    assert len(tokens)>0
 
-if __name__ == "__main__":
+if __name__=='__main__':
     test_lexer()
-    print("All tests passed!")
+    print('All tests passed!')

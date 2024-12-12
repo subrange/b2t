@@ -59,3 +59,4 @@ class Lexer:
                 elif k!='MISMATCH':
                     return Token(k,v,self.pos)
         return Token('EOF','',self.pos)
+
