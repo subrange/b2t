@@ -1,5 +1,7 @@
 # Tasks for Building a Transpiler
 
+https://en.wikipedia.org/wiki/GW-BASIC
+
 ## 1. Lexical Analyzer (Tokenizer)
 - [ ] Implement a lexical analyzer to split the input code into "tokens" (also known as "lexemes").
   - [ ] Use a while loop with string comparisons or regular expressions for tokenization.

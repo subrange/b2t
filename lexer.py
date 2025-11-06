@@ -59,6 +59,7 @@ class Lexer:
       v=m.group(k)
       if v:
         if DEBUG:
+          # FIXME: this prints out before the LINENUMBER fixed
           print(f"Matched {k}: {repr(v)} at position {self.pos}")
         self.pos=m.end()
         if k=='SKIP':
@@ -68,6 +69,7 @@ class Lexer:
           return Token(k,v,self.pos)
         if k=='NUMBER' and self.after_newline:
           self.after_newline=False
+          print("Linenumber:", v)
           return Token('LINENUMBER',v,self.pos)
         self.after_newline=False
         return Token(k,v,self.pos)

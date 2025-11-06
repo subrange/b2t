@@ -21,6 +21,7 @@ class Parser:
   def require(self, typ):
     t=self.peek()
     if t.typ==typ:
+      print(f"Advance: {typ}")
       self.advance()
       return t
     raise SyntaxError(f"Expected {typ}, got {t.typ}")
@@ -49,6 +50,11 @@ class Parser:
     t=self.peek()
     if t.typ=='PRINT':
       return self.parse_print_statement()
+    if t.typ=='LET' or t.typ=='IDENTIFIER': # fixme: it's requiring me anyway because of this if statement here.
+                                            # so require("LET") is not strictly necessary...
+      return self.parse_let_statement()
+    if t.typ=='FOR':
+      return self.parse_for_statement()
     if t.typ=='END':
       self.advance()
       return {"type": "End"}
@@ -60,11 +66,29 @@ class Parser:
     expr=self.parse_expression()
     return {'type': 'Print', 'expression': expr}
 
+  def parse_let_statement(self):
+    """ let statement """
+    # self.require('LET', False(???)) # LET (keyword) A (identifier) = (assign) 5 (number)
+    t=self.peek()
+    print(f"Current token: {t.typ}") # It's advancing when it shouldn't? Skip linenumber, then?
+    ident=self.require('IDENTIFIER').val# .val
+    t=self.peek()
+    print(f"Current token: {t.typ}")
+    self.require('ASSIGN')
+    expr=self.parse_expression()
+    return {'type': 'Let', 'identifier': ident, 'expression': expr}
+
+  def parse_for_statement(self):
+    pass
+
   def parse_expression(self):
     t=self.peek()
     if t.typ=='STRING_LITERAL':
       self.advance()
       return {"type": "StringLiteral", "value": t.val}
+    elif t.typ=='NUMBER':
+      self.advance()
+      return {"type": "Number", "value": t.val}
     else:
       raise SyntaxError(f"Unexpected token {t.typ} at position {t.pos}")
 
